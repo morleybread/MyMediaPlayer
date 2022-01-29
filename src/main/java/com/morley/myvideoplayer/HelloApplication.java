@@ -53,6 +53,7 @@ this.mediaView=new MediaView(mediaPlayer);
         });
 
 
+
         Scene scene=new Scene(borderPane,650,500);
         stage.setTitle("Hello!");
         stage.setScene(scene);

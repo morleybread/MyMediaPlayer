@@ -9,4 +9,5 @@ module com.morley.myvideoplayer {
     requires javafx.base;
     opens com.morley.myvideoplayer to javafx.fxml;
     exports com.morley.myvideoplayer;
+
 }
