@@ -7,7 +7,7 @@ module com.morley.myvideoplayer {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires javafx.base;
-    opens com.morley.myvideoplayer to javafx.fxml;
+
     exports com.morley.myvideoplayer;
 
 }

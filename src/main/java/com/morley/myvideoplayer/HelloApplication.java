@@ -22,10 +22,30 @@ import java.util.Arrays;
 public class HelloApplication extends Application {
      private   MediaView mediaView;
      private final ObservableList<MediaPlayer> mediaPlayers=FXCollections.observableArrayList();
-    private int poistion=0;
+     private int poistion;
+
+//
+//     public void init() throws IOException {
+//
+//         MediaConfiguration mediaConfiguration=new MediaConfiguration();
+//         File file=mediaConfiguration.start();
+//         this.poistion=mediaConfiguration.read(file);
+//
+//         mediaConfiguration.write(file,"last position: 5");
+//         
+//     }
+//
+
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        MediaConfiguration mediaConfiguration=new MediaConfiguration();//把它变为全局变量
+        File file=mediaConfiguration.start();
+        this.poistion=mediaConfiguration.read(file);
+        mediaConfiguration.write(file,"last position: 5");
+
+
         FileArrayCreater fileArrayCreater=new FileArrayCreater();
         System.out.println(fileArrayCreater.createFileObjectArray());
         int i=0;
@@ -92,7 +112,7 @@ this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
 
 
     public static void main(String[] args) {
-launch(args);
+         launch(args);
 
     }
 }
