@@ -36,8 +36,9 @@ public void write(File file,String str) throws IOException {
     public static void main(String[] args) throws IOException {
         MediaConfiguration mediaConfiguration=new MediaConfiguration();
         File file=mediaConfiguration.start();
-        System.out.println( mediaConfiguration.read(file));
-        mediaConfiguration.write(file,"last position: 5");
+        System.out.println( mediaConfiguration.read(file)+"");
+        System.out.println(Character.isDigit(mediaConfiguration.read(file)));
+//         mediaConfiguration.write(file,"last position: 1");
 
     }
 

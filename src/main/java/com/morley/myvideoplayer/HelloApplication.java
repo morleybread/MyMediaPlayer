@@ -3,6 +3,7 @@ package com.morley.myvideoplayer;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -23,28 +25,24 @@ public class HelloApplication extends Application {
      private   MediaView mediaView;
      private final ObservableList<MediaPlayer> mediaPlayers=FXCollections.observableArrayList();
      private int poistion;
+     private MediaConfiguration mediaConfiguration;
+     private File file;
 
-//
-//     public void init() throws IOException {
-//
-//         MediaConfiguration mediaConfiguration=new MediaConfiguration();
-//         File file=mediaConfiguration.start();
-//         this.poistion=mediaConfiguration.read(file);
-//
-//         mediaConfiguration.write(file,"last position: 5");
-//         
-//     }
-//
+   public HelloApplication() throws IOException {
+
+           mediaConfiguration=new MediaConfiguration();
+           file=mediaConfiguration.start();
+           poistion=mediaConfiguration.read(file)-48;
+
+
+   }
+
+
+
 
 
     @Override
     public void start(Stage stage) throws IOException {
-
-        MediaConfiguration mediaConfiguration=new MediaConfiguration();//把它变为全局变量
-        File file=mediaConfiguration.start();
-        this.poistion=mediaConfiguration.read(file);
-        mediaConfiguration.write(file,"last position: 5");
-
 
         FileArrayCreater fileArrayCreater=new FileArrayCreater();
         System.out.println(fileArrayCreater.createFileObjectArray());
@@ -55,8 +53,9 @@ public class HelloApplication extends Application {
           }
         System.out.println(this.mediaPlayers);
 
-
-this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
+        System.out.println(this.poistion);
+        System.out.println(this.poistion+"jgdirthgi");
+        this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
 
         Button button=new Button("<<");
         Button button1=new Button(">>");
@@ -70,7 +69,7 @@ this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
         borderPane.setBottom(hBox);
 
 
-        nextButton.setOnAction(e->{
+        nextButton.setOnAction(e->{   //点击事件 一旦点击 立即发生
           this.mediaPlayers.get(poistion).seek(Duration.INDEFINITE);
           this.mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() {
                 @Override
@@ -79,13 +78,9 @@ this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
                     System.out.println(poistion);
                     mediaView.setMediaPlayer(mediaPlayers.get(poistion));
                     mediaPlayers.get(poistion).setAutoPlay(true);
+
                 }
             });
-
-          //记忆功能
-
-
-
         });
 
         Scene scene=new Scene(borderPane,650,500);
@@ -93,15 +88,30 @@ this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
         stage.setScene(scene);
         stage.show();
 
-//mediaPlayer.setAutoPlay(true);
-        this.mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() {
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                String str="last poistion: "+poistion;
+                try {
+                    mediaConfiguration.write(file,str);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
+
+
+//mediaPlayer.setAutoPlay(true);
+        this.mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() {    //无点击 自动发生
            @Override
                  public void run() {
                  poistion++;
-               System.out.println(poistion);
+                 System.out.println(poistion);
                  mediaView.setMediaPlayer(mediaPlayers.get(poistion));
                  mediaPlayers.get(poistion).setAutoPlay(true);
+
+
          }
     });
         this.mediaPlayers.get(poistion).setAutoPlay(true);
@@ -111,8 +121,13 @@ this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
          launch(args);
+//        MediaConfiguration mediaConfiguration=new MediaConfiguration();
+//        File file=mediaConfiguration.start();
+//        System.out.println( mediaConfiguration.read(file)+"");
+//        System.out.println(Character.isDigit(mediaConfiguration.read(file)));
+////         mediaConfiguration.write(file,"last position: 1");
 
     }
 }

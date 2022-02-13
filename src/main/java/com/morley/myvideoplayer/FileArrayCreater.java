@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+
+//排序 实现compare接口
 public class FileArrayCreater {
 
     public ArrayList<File> createFileObjectArray(){
