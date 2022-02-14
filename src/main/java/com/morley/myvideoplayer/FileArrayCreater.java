@@ -2,6 +2,7 @@ package com.morley.myvideoplayer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 
 import javafx.collections.ObservableList;
@@ -11,7 +12,14 @@ import javafx.scene.media.MediaPlayer;
 
 //排序 实现compare接口
 public class FileArrayCreater {
+    //返回 dot之前的数字
+    public int getseq(String str){
+        return  Integer.parseInt(str.substring(0,str.indexOf('.')));
+    }
 
+
+
+    //文件夹排序 文件排序
     public ArrayList<File> createFileObjectArray(){
         ObservableList<MediaPlayer> observableList = null;
         ArrayList<File> files=new ArrayList<>();
@@ -23,6 +31,18 @@ public class FileArrayCreater {
                 }
             }
         }
+
+        files.sort(new Comparator<File>() {
+            @Override
+            public int compare(File file, File t1) {
+                if ((char)file.getName().charAt(0)>(char) t1.getName().charAt(0)){
+                    return 1;
+                }else {
+                    return -1;
+                }
+
+            }
+        });
         return files;
     }
 
@@ -31,7 +51,8 @@ public class FileArrayCreater {
 
     public static void main(String[] args) {
         FileArrayCreater fileArrayCreater =new FileArrayCreater();
-        System.out.println(fileArrayCreater.createFileObjectArray());
+//        System.out.println(fileArrayCreater.createFileObjectArray());
+
 
     }
 
