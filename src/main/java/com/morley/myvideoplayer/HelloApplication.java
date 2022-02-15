@@ -57,8 +57,8 @@ public class HelloApplication extends Application {
         System.out.println(this.poistion+"jgdirthgi");
         this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
 
-        Button button=new Button("<<");
-        Button button1=new Button(">>");
+        Button back =new Button("<<");
+        Button forward=new Button(">>");
         Button nextButton=new Button("next");
         Button pauseButton=new Button("pause");
         BorderPane borderPane=new BorderPane();
@@ -82,6 +82,15 @@ public class HelloApplication extends Application {
                 }
             });
         });
+
+        pauseButton.setOnAction(e->{
+            this.mediaPlayers.get(poistion).pause();
+        });
+        back.setOnAction(e->{
+            this.mediaPlayers.get(poistion).seek();
+        });
+
+
 
         Scene scene=new Scene(borderPane,650,500);
         stage.setTitle("Hello!");
