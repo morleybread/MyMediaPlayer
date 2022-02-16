@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
@@ -57,6 +58,16 @@ public class HelloApplication extends Application {
         System.out.println(this.poistion+"jgdirthgi");
         this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
 
+        Slider slhorizon=new Slider();
+        slhorizon.setShowTickLabels(true);
+        slhorizon.setShowTickMarks(true);
+//       slhorizon.valueProperty().addListener(ov->{
+//
+//           this.mediaPlayers.get(poistion).seek();
+//       });
+
+
+
         Button back =new Button("<<");
         Button forward=new Button(">>");
         Button nextButton=new Button("next");
@@ -64,9 +75,11 @@ public class HelloApplication extends Application {
         BorderPane borderPane=new BorderPane();
         HBox hBox=new HBox(10);
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(nextButton,pauseButton);
+        hBox.getChildren().addAll(nextButton,pauseButton,slhorizon,back,forward);
         borderPane.setCenter(this.mediaView);
         borderPane.setBottom(hBox);
+
+
 
 
         nextButton.setOnAction(e->{   //点击事件 一旦点击 立即发生
@@ -87,7 +100,7 @@ public class HelloApplication extends Application {
             this.mediaPlayers.get(poistion).pause();
         });
         back.setOnAction(e->{
-            this.mediaPlayers.get(poistion).seek();
+            this.mediaPlayers.get(poistion).seek(this.mediaPlayers.get(poistion).getCurrentTime().divide(100));
         });
 
 

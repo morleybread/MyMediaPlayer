@@ -46,9 +46,9 @@ public class FileArrayCreater {
             @Override
             public int compare(File file, File t1) {
                 if ((char)file.getName().charAt(0)>(char) t1.getName().charAt(0)){
-                    return -1;
-                }else {
                     return 1;
+                }else {
+                    return -1;
                 }
 
             }
