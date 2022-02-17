@@ -1,6 +1,7 @@
 package com.morley.myvideoplayer;
 
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -8,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -34,8 +36,6 @@ public class HelloApplication extends Application {
            mediaConfiguration=new MediaConfiguration();
            file=mediaConfiguration.start();
            poistion=mediaConfiguration.read(file)-48;
-
-
    }
 
 
@@ -59,13 +59,25 @@ public class HelloApplication extends Application {
         this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
 
         Slider slhorizon=new Slider();
+        slhorizon.setMax(100);
+
         slhorizon.setShowTickLabels(true);
         slhorizon.setShowTickMarks(true);
+        Label timelabel=new Label();
+
+
+        this.mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
+            timelabel.setText(String.valueOf(this.mediaPlayers.get(poistion).getCurrentTime().toSeconds()));
+
+        });
+
 //       slhorizon.valueProperty().addListener(ov->{
 //
 //           this.mediaPlayers.get(poistion).seek();
 //       });
-
+//
+//        Label label=new Label("");
+//        Slider slider=new Slider();
 
 
         Button back =new Button("<<");
@@ -75,7 +87,7 @@ public class HelloApplication extends Application {
         BorderPane borderPane=new BorderPane();
         HBox hBox=new HBox(10);
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(nextButton,pauseButton,slhorizon,back,forward);
+        hBox.getChildren().addAll(timelabel,nextButton,pauseButton,slhorizon,back,forward);
         borderPane.setCenter(this.mediaView);
         borderPane.setBottom(hBox);
 
@@ -91,7 +103,6 @@ public class HelloApplication extends Application {
                     System.out.println(poistion);
                     mediaView.setMediaPlayer(mediaPlayers.get(poistion));
                     mediaPlayers.get(poistion).setAutoPlay(true);
-
                 }
             });
         });
@@ -99,8 +110,13 @@ public class HelloApplication extends Application {
         pauseButton.setOnAction(e->{
             this.mediaPlayers.get(poistion).pause();
         });
+
         back.setOnAction(e->{
-            this.mediaPlayers.get(poistion).seek(this.mediaPlayers.get(poistion).getCurrentTime().divide(100));
+            this.mediaPlayers.get(poistion).seek(this.mediaPlayers.get(poistion).getCurrentTime().subtract(this.mediaPlayers.get(poistion).getCurrentTime().divide(5)));
+        });
+
+        forward.setOnAction(e->{
+            this.mediaPlayers.get(poistion).seek(this.mediaPlayers.get(poistion).getCurrentTime().add(this.mediaPlayers.get(poistion).getCurrentTime().divide(5)));
         });
 
 
@@ -150,6 +166,9 @@ public class HelloApplication extends Application {
 //        System.out.println( mediaConfiguration.read(file)+"");
 //        System.out.println(Character.isDigit(mediaConfiguration.read(file)));
 ////         mediaConfiguration.write(file,"last position: 1");
+
+
+
 
     }
 }
