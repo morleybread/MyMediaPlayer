@@ -75,35 +75,24 @@ public class HelloApplication extends Application {
         int i=0;
           for(File f:fileArrayCreater.createFileObjectArray()){
               System.out.println(i++);
-            this.mediaPlayers.add( new MediaPlayer(new Media(f.toURI().toString())));
+            mediaPlayers.add( new MediaPlayer(new Media(f.toURI().toString())));
           }
-//        System.out.println(this.mediaPlayers);
-//
-//        System.out.println(this.poistion);
-//        System.out.println(this.poistion+"jgdirthgi");
-        this.mediaView=new MediaView(this.mediaPlayers.get(this.poistion));
-
+        mediaView=new MediaView(mediaPlayers.get(this.poistion));
         Slider slhorizon=new Slider();
         slhorizon.setMax(100);
         slhorizon.setShowTickLabels(true);
         slhorizon.setShowTickMarks(true);
         Label timelabel=new Label();
-
-        this.mediaPlayers.get(poistion).setOnReady(new Runnable() {
+        mediaPlayers.get(poistion).setOnReady(new Runnable() {
             @Override
             public void run() {
                 allDuration=mediaPlayers.get(poistion).getStopTime();
 
             }
         });
-        this.mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
-            timelabel.setText(formatTime( this.mediaPlayers.get(poistion).getCurrentTime(),allDuration));
-//            allDuration=this.mediaPlayers.get(poistion).getStopTime();
-//            System.out.println(allDuration.toMinutes());
+     mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
+            timelabel.setText(formatTime(mediaPlayers.get(poistion).getCurrentTime(),allDuration));
         });
-
-
-
 //        allDuration=this.mediaPlayers.get(poistion).getStopTime();
 //        System.out.println("================================");
 //        System.out.println(allDuration);
@@ -114,8 +103,6 @@ public class HelloApplication extends Application {
 //
 //        Label label=new Label("");
 //        Slider slider=new Slider();
-
-
         Button back =new Button("<<");
         Button forward=new Button(">>");
         Button nextButton=new Button("next");
@@ -133,8 +120,8 @@ public class HelloApplication extends Application {
 
 
         nextButton.setOnAction(e->{   //点击事件 一旦点击 立即发生
-          this.mediaPlayers.get(poistion).seek(Duration.INDEFINITE);
-          this.mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() {
+          mediaPlayers.get(poistion).seek(Duration.INDEFINITE);
+          mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() {
                 @Override
                 public void run() {
                     poistion++;
@@ -146,21 +133,19 @@ public class HelloApplication extends Application {
         });
 
         pauseButton.setOnAction(e->{
-            this.mediaPlayers.get(poistion).pause();
+            mediaPlayers.get(poistion).pause();
         });
 
         back.setOnAction(e->{
-            this.mediaPlayers.get(poistion).seek(this.mediaPlayers.get(poistion).getCurrentTime().subtract(this.mediaPlayers.get(poistion).getCurrentTime().divide(5)));
+            mediaPlayers.get(poistion).seek(mediaPlayers.get(poistion).getCurrentTime().subtract(mediaPlayers.get(poistion).getCurrentTime().divide(5)));
         });
 
         forward.setOnAction(e->{
 
-            allDuration=this.mediaPlayers.get(poistion).getStopTime();
+            allDuration=mediaPlayers.get(poistion).getStopTime();
             System.out.println(allDuration.toMillis());
-            this.mediaPlayers.get(poistion).seek(this.mediaPlayers.get(poistion).getCurrentTime().add(this.mediaPlayers.get(poistion).getCurrentTime().divide(5)));
+            mediaPlayers.get(poistion).seek(mediaPlayers.get(poistion).getCurrentTime().add(mediaPlayers.get(poistion).getCurrentTime().divide(5)));
         });
-
-
 
         Scene scene=new Scene(borderPane,650,500);
         stage.setTitle("Hello!");
@@ -179,21 +164,21 @@ public class HelloApplication extends Application {
             }
         });
 
-        this.mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
-            Duration currentTime = this.mediaPlayers.get(poistion).getCurrentTime();
+       mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
+            Duration currentTime = mediaPlayers.get(poistion).getCurrentTime();
             slhorizon.setValue(currentTime.toMillis()/allDuration.toMillis() * 100);
         });
 
         slhorizon.valueProperty().addListener(ov->{
             if(slhorizon.isValueChanging()) {     //加入Slider正在改变的判定，否则由于update线程的存在，mediaPlayer会不停地回绕
-                this.mediaPlayers.get(poistion).seek(allDuration.multiply(slhorizon.getValue() / 100.0));
+                mediaPlayers.get(poistion).seek(allDuration.multiply(slhorizon.getValue() / 100.0));
             }
         });
 
 
 
 //mediaPlayer.setAutoPlay(true);
-        this.mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() {    //无点击 自动发生
+        mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() {    //无点击 自动发生
            @Override
                  public void run() {
                  poistion++;
@@ -203,7 +188,7 @@ public class HelloApplication extends Application {
          }
     });
 
-        this.mediaPlayers.get(poistion).setAutoPlay(true);
+        mediaPlayers.get(poistion).setAutoPlay(true);
     }
 
 
