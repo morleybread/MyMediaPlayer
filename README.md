@@ -1,2 +1,2 @@
 # MyMediaPlayer
-A simple mp4 player 
+A simple mp4 player by javafx
