@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+
 public class HelloApplication extends Application {
      private   MediaView mediaView;
      private final ObservableList<MediaPlayer> mediaPlayers=FXCollections.observableArrayList();
@@ -35,9 +36,9 @@ public class HelloApplication extends Application {
 
    public HelloApplication() throws IOException {
 
-           mediaConfiguration=new MediaConfiguration();
-           file=mediaConfiguration.start();
-           poistion=mediaConfiguration.read(file)-48;
+           this.mediaConfiguration=new MediaConfiguration();
+           this.file=mediaConfiguration.start();
+           this.poistion=mediaConfiguration.read(file)-48;
    }
 
     protected String formatTime(Duration elapsed,Duration duration){

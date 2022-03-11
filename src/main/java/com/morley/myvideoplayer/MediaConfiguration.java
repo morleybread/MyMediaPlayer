@@ -8,7 +8,6 @@ public File start(){
     String config=this.getClass().getClassLoader().getResource("MediaConfiguration.txt").getFile();
     File f=new File(config);
     return f;
-
 }
 
 public char read(File file) throws IOException { //返回位置
