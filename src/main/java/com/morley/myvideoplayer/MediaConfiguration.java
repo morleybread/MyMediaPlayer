@@ -4,7 +4,7 @@ import java.io.*;
 
 public class MediaConfiguration {
 
-public File start(){
+public File start(){     //获取配置文件对象
     String config=this.getClass().getClassLoader().getResource("MediaConfiguration.txt").getFile();
     File f=new File(config);
     return f;
@@ -20,16 +20,16 @@ public char read(File file) throws IOException { //返回位置
         result.append(new String(a, 0, len));
     }
     fr.close();
-    return result.toString().charAt(result.toString().length()-2);
+    return result.toString().charAt(result.toString().length()-2);//返回位置
 }
 
 
 
 public void write(File file,String str) throws IOException {
     FileWriter fw=new FileWriter(file,true);
-    fw.write("\n"+str+"\n");
-     fw.flush();
-     fw.close();
+    fw.write("\n"+str+"\n");          //写入位置
+    fw.flush();
+    fw.close();
 }
 
     public static void main(String[] args) throws IOException {

@@ -20,7 +20,6 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,15 +29,16 @@ public class HelloApplication extends Application {
      private   MediaView mediaView;
      private final ObservableList<MediaPlayer> mediaPlayers=FXCollections.observableArrayList();
      private int poistion;
-     private MediaConfiguration mediaConfiguration;
-     private File file;
+     private final MediaConfiguration mediaConfiguration;
+     private final File file;
      private Duration allDuration;
+     private Boolean play=true;
 
    public HelloApplication() throws IOException {
-
            this.mediaConfiguration=new MediaConfiguration();
-           this.file=mediaConfiguration.start();
-           this.poistion=mediaConfiguration.read(file)-48;
+           this.file=mediaConfiguration.start(); //返回播放上次位置
+           this.poistion=mediaConfiguration.read(file)-48; //由char 变为int
+
    }
 
     protected String formatTime(Duration elapsed,Duration duration){
@@ -66,17 +66,14 @@ public class HelloApplication extends Application {
             }
         }
     }
-
-
     @Override
     public void start(Stage stage) throws IOException {
-
         FileArrayCreater fileArrayCreater=new FileArrayCreater();
         System.out.println(fileArrayCreater.createFileObjectArray());
         int i=0;
           for(File f:fileArrayCreater.createFileObjectArray()){
-              System.out.println(i++);
-            mediaPlayers.add( new MediaPlayer(new Media(f.toURI().toString())));
+              System.out.println(i++); //计数媒体个数
+            mediaPlayers.add( new MediaPlayer(new Media(f.toURI().toString())));//创建文件对象
           }
         mediaView=new MediaView(mediaPlayers.get(this.poistion));
         Slider slhorizon=new Slider();
@@ -88,7 +85,6 @@ public class HelloApplication extends Application {
             @Override
             public void run() {
                 allDuration=mediaPlayers.get(poistion).getStopTime();
-
             }
         });
      mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
@@ -101,7 +97,6 @@ public class HelloApplication extends Application {
 //
 //           this.mediaPlayers.get(poistion).seek();
 //       });
-//
 //        Label label=new Label("");
 //        Slider slider=new Slider();
         Button back =new Button("<<");
@@ -120,21 +115,51 @@ public class HelloApplication extends Application {
 
 
 
-        nextButton.setOnAction(e->{   //点击事件 一旦点击 立即发生
-          mediaPlayers.get(poistion).seek(Duration.INDEFINITE);
-          mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() {
+        nextButton.setOnAction(e->{
+            if(!play){   //开启媒体
+                mediaPlayers.get(poistion).play();
+                play=true;
+            }
+            //点击事件 一旦点击 立即发生
+          mediaPlayers.get(poistion).seek(Duration.INDEFINITE);//媒体进度为结束
+          mediaPlayers.get(poistion).setOnEndOfMedia(new Runnable() { //创建新线程
                 @Override
                 public void run() {
                     poistion++;
                     System.out.println(poistion);
                     mediaView.setMediaPlayer(mediaPlayers.get(poistion));
                     mediaPlayers.get(poistion).setAutoPlay(true);
+
+
+                    mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
+                        Duration currentTime = mediaPlayers.get(poistion).getCurrentTime();
+                        slhorizon.setValue(currentTime.toMillis()/allDuration.toMillis() * 100);
+                    });
+
+                    slhorizon.valueProperty().addListener(ov->{
+                        if(slhorizon.isValueChanging()) {     //加入Slider正在改变的判定，否则由于update线程的存在，mediaPlayer会不停地回绕
+                            mediaPlayers.get(poistion).seek(allDuration.multiply(slhorizon.getValue() / 100.0));
+                        }
+                    });
+                    mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
+                        timelabel.setText(formatTime(mediaPlayers.get(poistion).getCurrentTime(),allDuration));
+                    });
+
                 }
             });
         });
 
         pauseButton.setOnAction(e->{
-            mediaPlayers.get(poistion).pause();
+            if (play){
+                mediaPlayers.get(poistion).pause();
+                play=false;
+            }
+            else {
+                mediaPlayers.get(poistion).play();
+                play=true;
+            }
+
+
         });
 
         back.setOnAction(e->{
@@ -142,7 +167,6 @@ public class HelloApplication extends Application {
         });
 
         forward.setOnAction(e->{
-
             allDuration=mediaPlayers.get(poistion).getStopTime();
             System.out.println(allDuration.toMillis());
             mediaPlayers.get(poistion).seek(mediaPlayers.get(poistion).getCurrentTime().add(mediaPlayers.get(poistion).getCurrentTime().divide(5)));
@@ -186,7 +210,22 @@ public class HelloApplication extends Application {
                  System.out.println(poistion);
                  mediaView.setMediaPlayer(mediaPlayers.get(poistion));
                  mediaPlayers.get(poistion).setAutoPlay(true);
-         }
+
+               mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
+                   Duration currentTime = mediaPlayers.get(poistion).getCurrentTime();
+                   slhorizon.setValue(currentTime.toMillis()/allDuration.toMillis() * 100);
+               });
+
+               slhorizon.valueProperty().addListener(ov->{
+                   if(slhorizon.isValueChanging()) {     //加入Slider正在改变的判定，否则由于update线程的存在，mediaPlayer会不停地回绕
+                       mediaPlayers.get(poistion).seek(allDuration.multiply(slhorizon.getValue() / 100.0));
+                   }
+               });
+               mediaPlayers.get(poistion).currentTimeProperty().addListener(ov->{
+                   timelabel.setText(formatTime(mediaPlayers.get(poistion).getCurrentTime(),allDuration));
+               });
+
+           }
     });
 
         mediaPlayers.get(poistion).setAutoPlay(true);
